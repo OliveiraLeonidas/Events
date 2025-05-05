@@ -23,6 +23,6 @@ public interface SubscriptionRepo extends CrudRepository<Subscription, Integer> 
             " WHERE indication_user_id IS NOT NULL " +
             " AND event_id = :eventId " +
             " GROUP BY indication_user_id " +
-            " ORDER BY total_indications DESC; ", nativeQuery = true)
+            " ORDER BY total_indications DESC LIMIT 3; ", nativeQuery = true)
     public List<SubscriptionRankingItem> generateRanking(@Param(value = "eventId") Integer eventId );
 }
