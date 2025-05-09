@@ -3,9 +3,9 @@ package com.nlw_connect.events.repository;
 import com.nlw_connect.events.model.User;
 import org.springframework.data.repository.CrudRepository;
 
-public interface UserRepo extends CrudRepository<User, Integer> {
+public interface UserRepo extends CrudRepository<User, String> {
 
-    public User findByEmail(String email);
+    User findByEmail(String email);
 
-    public User findUserById(Integer userId);
+    User findUserById(String userId);
 }

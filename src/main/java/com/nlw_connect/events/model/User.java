@@ -1,43 +1,42 @@
 package com.nlw_connect.events.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
+
+import java.time.Instant;
 
 @Entity
-@Table(name = "tbl_user")
+@Getter
+@Setter
+@Table(name = "users")
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id", nullable = false)
+    private String id;
 
-    @Column(name = "user_name", length = 255, nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "user_email", length = 255, nullable = false, unique = true)
-    public String email;
+    @Column(name = "email", nullable = false, unique = true)
+    private String email;
 
-    public Integer getId() {
-        return id;
-    }
+    @Column(name = "username", unique = true)
+    private String username;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    @Column(name = "password", nullable = false, length = 120)
+    private String password;
 
-    public String getName() {
-        return name;
-    }
+    @ColumnDefault("ROLE_USER")
+    @Column(name = "role", nullable = false, length = 20)
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    @ColumnDefault("CURRENT_TIMESTAMP")
+    @Column(name = "created_at", nullable = false)
+    private Instant createdAt;
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
 }

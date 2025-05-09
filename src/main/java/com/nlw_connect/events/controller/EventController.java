@@ -5,7 +5,7 @@ import com.nlw_connect.events.dto.SubscriptionResponse;
 import com.nlw_connect.events.dto.UserIndicatorNotFoundException;
 import com.nlw_connect.events.exception.EventNotFoundException;
 import com.nlw_connect.events.exception.SubscriptionConflictException;
-import com.nlw_connect.events.model.Event;
+import com.nlw_connect.events.model.Events;
 import com.nlw_connect.events.model.Subscription;
 import com.nlw_connect.events.model.User;
 import com.nlw_connect.events.service.EmailService;
@@ -43,24 +43,25 @@ public class EventController {
     @Autowired
     private EmailService emailService;
 
+//  Proteger rota na criação de eventos
     @Operation( summary = "create event" )
     @PostMapping()
-    public Event addEvent(@RequestBody Event newEvent) {
+    public Events addEvent(@RequestBody Events newEvent) {
         return eventService.addNewEvent(newEvent);
     }
 
 
     @Operation( summary = "List all event")
     @GetMapping()
-    public List<Event> getAllEvents() {
+    public List<Events> getAllEvents() {
         return eventService.getAllEvents();
     }
 
 
     @Operation( summary = "Get event by ID" )
     @GetMapping("/{eventId}")
-    public ResponseEntity<Event> getEventByEventId(@PathVariable("eventId") int eventId) {
-        Event evt = eventService.getById(eventId);
+    public ResponseEntity<Events> getEventByEventId(@PathVariable("eventId") String eventId) {
+        Events evt = eventService.getById(eventId);
         if (evt != null) {
 
             return ResponseEntity.ok().body(evt);
@@ -87,8 +88,8 @@ public class EventController {
     )
     @PostMapping("/{eventId}/subscription")
     public ResponseEntity<?> subscribe(@RequestBody User subscriber, //novo usuário
-                                       @PathVariable("eventId") Integer eventId,
-                                       @Param("userId") Integer userId) { //usuário que indicou
+                                       @PathVariable("eventId") String eventId,
+                                       @Param("userId") String userId) { //usuário que indicou
 
         try {
             SubscriptionResponse subResp = subService.createSub(eventId, subscriber, userId);
@@ -96,7 +97,7 @@ public class EventController {
             if (subResp != null) {
 
                 emailService.sendConfirmationSubscription(subscriber, eventId);
-                System.out.println(subscriber.getName());
+                System.out.println(subscriber.getEmail());
                 System.out.println(eventId);
                 return ResponseEntity.ok(subResp);
             }
@@ -111,8 +112,23 @@ public class EventController {
         return ResponseEntity.badRequest().build();
     }
 
+
+    @Operation(
+            summary = "generate event certificate",
+            parameters = {
+                    @Parameter(in = ParameterIn.QUERY, name = "eventId", description = "Event ID"),
+                    @Parameter(in = ParameterIn.QUERY, name = "userId", description = "User ID")
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "certificate was generated",
+                            content = @Content(mediaType = MediaType.APPLICATION_PDF_VALUE)
+                    ),
+                    @ApiResponse(responseCode = "404", description = "Resource not found", content = @Content(schema = @Schema(implementation = ErrorMessage.class))
+                    ),
+            }
+    )
     @GetMapping("certificate")
-    public ResponseEntity<byte[]> certificate(@RequestParam("userId") int userId, @RequestParam("eventId") int eventId) throws IOException, MessagingException {
+    public ResponseEntity<byte[]> certificate(@RequestParam("userId") String userId, @RequestParam("eventId") String eventId) throws IOException, MessagingException {
         ByteArrayOutputStream pdf = emailService.sendEventCertificate(userId, eventId);
         return ResponseEntity
                 .status(200)

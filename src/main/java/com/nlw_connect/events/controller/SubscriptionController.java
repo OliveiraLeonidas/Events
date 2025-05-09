@@ -40,7 +40,7 @@ public class SubscriptionController {
             }
     )
     @GetMapping("/subscription/ranking")
-    public ResponseEntity<?> generateRankingByEvent(@RequestParam int eventId) {
+    public ResponseEntity<?> generateRankingByEvent(@RequestParam String eventId) {
         try {
             return ResponseEntity.status(200).body(service.getCompleteRanking(eventId));
         }

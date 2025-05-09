@@ -1,9 +1,8 @@
 package com.nlw_connect.events.service;
 
-import com.nlw_connect.events.model.Event;
+import com.nlw_connect.events.model.Events;
 import com.nlw_connect.events.model.User;
-import com.nlw_connect.events.repository.EventRepo;
-import com.nlw_connect.events.repository.UserRepo;
+import com.nlw_connect.events.utils.LocalDateFormatter;
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,23 +18,19 @@ public class PDFService {
     @Autowired
     private TemplateEngine templateEngine;
 
-    @Autowired
-    private EventRepo eventRepo;
-
-    @Autowired
-    private UserRepo userRepo;
-
-    public ByteArrayOutputStream GeneratePDF(User subscriber, Event event) throws IOException {
+    public ByteArrayOutputStream GeneratePDF(User subscriber, Events event) throws IOException {
 
         long eventTime = event.getStartTime().until(event.getEndTime(), ChronoUnit.HOURS);
         long days = event.getStartDate().until(event.getEndDate(), ChronoUnit.DAYS) + 1;
+
+
 
         Context context = new Context();
         context.setVariable("nome", subscriber.getName());
         context.setVariable("title", event.getTitle());
         context.setVariable("location", event.getLocation());
-        context.setVariable("startDate", event.getStartDate());
-        context.setVariable("endDate", event.getEndDate());
+        context.setVariable("startDate", LocalDateFormatter.formatDate(event.getStartDate()));
+        context.setVariable("endDate", LocalDateFormatter.formatDate(event.getEndDate()));
         context.setVariable("startTime", event.getStartTime());
         context.setVariable("endTime", event.getEndTime());
         context.setVariable("duracaoHoras", (days*eventTime));
