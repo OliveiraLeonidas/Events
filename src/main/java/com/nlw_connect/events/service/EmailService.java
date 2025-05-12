@@ -23,11 +23,11 @@ import java.io.IOException;
 @Service
 public class EmailService {
 
-    private String from;
-    private String to;
-    private String TEMPLATE_HTML;
-    private String subject;
-    private String text;
+//    private String from;
+//    private String to;
+//    private String TEMPLATE_HTML;
+//    private String subject;
+//    private String text;
 
     @Autowired
     private JavaMailSender mailSender;

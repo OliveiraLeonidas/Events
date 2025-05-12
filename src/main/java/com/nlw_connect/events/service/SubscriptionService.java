@@ -13,6 +13,7 @@ import com.nlw_connect.events.repository.EventRepo;
 import com.nlw_connect.events.repository.SubscriptionRepo;
 import com.nlw_connect.events.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -30,15 +31,18 @@ public class SubscriptionService {
 
     public SubscriptionResponse createSub(String eventId, User user, String userId) {
         Events event = eventRepo.findByEventId(eventId);
-
+        System.out.println("Encontrou o evento: " + event);
         if (event == null) {
             throw new EventNotFoundException("Event not found");
         }
 
-        User foundUser = userRepo.findUserById(user.getId());
-        if (foundUser == null) { // caso 1: se o usuário não existir, então deve ser criado
+        User foundUser = userRepo.findByEmail(user.getEmail());
+        System.out.println("Usuário encontrado: " + foundUser);
+        if (foundUser == null) {
             user.setCreatedAt(Instant.now());
-            user.setRole(Role.ROLE_USER);
+            user.setRole(Role.USER);
+            String encryptedPassword = new BCryptPasswordEncoder().encode(user.getPassword());
+            user.setPassword(encryptedPassword);
             foundUser = userRepo.save(user);
         }
 

@@ -36,14 +36,12 @@ public class EventController {
 
     @Autowired
     private EventService eventService;
-
     @Autowired
     private SubscriptionService subService;
-
     @Autowired
     private EmailService emailService;
 
-//  Proteger rota na criação de eventos
+
     @Operation( summary = "create event" )
     @PostMapping()
     public Events addEvent(@RequestBody Events newEvent) {
@@ -117,7 +115,8 @@ public class EventController {
             summary = "generate event certificate",
             parameters = {
                     @Parameter(in = ParameterIn.QUERY, name = "eventId", description = "Event ID"),
-                    @Parameter(in = ParameterIn.QUERY, name = "userId", description = "User ID")
+                    @Parameter(in = ParameterIn.QUERY, name = "userId", description = "User ID"),
+                    @Parameter(in = ParameterIn.QUERY, name = "passkey", description = "passkey that was shared by event host")
             },
             responses = {
                     @ApiResponse(responseCode = "200", description = "certificate was generated",
@@ -125,10 +124,17 @@ public class EventController {
                     ),
                     @ApiResponse(responseCode = "404", description = "Resource not found", content = @Content(schema = @Schema(implementation = ErrorMessage.class))
                     ),
+                    @ApiResponse(responseCode = "422", description = "Missing key certificate values", content = @Content(schema = @Schema(implementation = ErrorMessage.class))
+                    ),
             }
     )
-    @GetMapping("certificate")
-    public ResponseEntity<byte[]> certificate(@RequestParam("userId") String userId, @RequestParam("eventId") String eventId) throws IOException, MessagingException {
+    @GetMapping("/certificate")
+    public ResponseEntity<byte[]> certificate(@RequestParam("userId") String userId, @RequestParam("eventId") String eventId, @RequestParam("passkey") String passkey) throws IOException, MessagingException {
+
+        if(!passkey.equals("certificate-password")) {
+            return ResponseEntity.status(422).build();
+        }
+
         ByteArrayOutputStream pdf = emailService.sendEventCertificate(userId, eventId);
         return ResponseEntity
                 .status(200)
