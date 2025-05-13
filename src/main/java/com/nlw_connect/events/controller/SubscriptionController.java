@@ -2,7 +2,7 @@ package com.nlw_connect.events.controller;
 
 import com.nlw_connect.events.dto.SubscriptionRankingItem;
 import com.nlw_connect.events.exception.EventNotFoundException;
-import com.nlw_connect.events.dto.ErrorMessage;
+import com.nlw_connect.events.model.ErrorMessage;
 import com.nlw_connect.events.service.SubscriptionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

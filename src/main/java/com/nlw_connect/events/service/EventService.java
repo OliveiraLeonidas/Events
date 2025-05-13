@@ -1,6 +1,6 @@
 package com.nlw_connect.events.service;
 
-import com.nlw_connect.events.model.Events;
+import com.nlw_connect.events.domain.entities.Events;
 import com.nlw_connect.events.repository.EventRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

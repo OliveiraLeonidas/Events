@@ -1,8 +1,7 @@
 package com.nlw_connect.events.repository;
 
-import com.nlw_connect.events.model.User;
+import com.nlw_connect.events.domain.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public interface UserRepo extends JpaRepository<User, String> {

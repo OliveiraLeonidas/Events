@@ -1,7 +1,7 @@
 package com.nlw_connect.events.service;
 
-import com.nlw_connect.events.model.Events;
-import com.nlw_connect.events.model.User;
+import com.nlw_connect.events.domain.entities.Events;
+import com.nlw_connect.events.domain.entities.User;
 import com.nlw_connect.events.utils.LocalDateFormatter;
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 import org.springframework.beans.factory.annotation.Autowired;

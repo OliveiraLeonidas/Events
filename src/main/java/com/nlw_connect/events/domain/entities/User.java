@@ -1,5 +1,6 @@
-package com.nlw_connect.events.model;
+package com.nlw_connect.events.domain.entities;
 
+import com.nlw_connect.events.model.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -39,7 +40,7 @@ public class User implements UserDetails {
     @Column(name = "password", nullable = false, length = 120)
     private String password;
 
-    @ColumnDefault("ROLE_USER")
+    @ColumnDefault("USER")
     @Column(name = "role", nullable = false, length = 20)
     @Enumerated(EnumType.STRING)
     private Role role;

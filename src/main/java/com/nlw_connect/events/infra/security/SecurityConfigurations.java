@@ -1,6 +1,5 @@
 package com.nlw_connect.events.infra.security;
 
-import com.nlw_connect.events.model.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

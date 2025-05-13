@@ -2,7 +2,7 @@ package com.nlw_connect.events.controller;
 
 import com.nlw_connect.events.dto.*;
 import com.nlw_connect.events.infra.security.TokenService;
-import com.nlw_connect.events.model.User;
+import com.nlw_connect.events.domain.entities.User;
 import com.nlw_connect.events.repository.UserRepo;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,14 +38,14 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<RegisterResponse> register(@RequestBody @Valid RegisterDTO data) {
+    public ResponseEntity<RegisterResponseDTO> register(@RequestBody @Valid RegisterDTO data) {
         if(this.userRepo.findByUsername(data.username()) != null) return ResponseEntity.badRequest().build();
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
         User newUser = new User(data.name(), data.email(), data.username(), encryptedPassword, data.role(), Instant.now());
 
         this.userRepo.save(newUser);
 
-        return ResponseEntity.ok(RegisterResponse.from(newUser));
+        return ResponseEntity.ok(RegisterResponseDTO.from(newUser));
     }
 
     @DeleteMapping("/delete")
@@ -56,6 +56,6 @@ public class UserController {
 
         this.userRepo.delete(user);
 
-        return ResponseEntity.ok(new DeleteUserResponse("user was deleted!").getMessage());
+        return ResponseEntity.status(200).build();
     }
 }

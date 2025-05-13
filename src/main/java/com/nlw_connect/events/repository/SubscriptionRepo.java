@@ -1,14 +1,12 @@
 package com.nlw_connect.events.repository;
 
 import com.nlw_connect.events.dto.SubscriptionRankingItem;
-import com.nlw_connect.events.model.Events;
-import com.nlw_connect.events.model.Subscription;
-import com.nlw_connect.events.model.User;
-import org.springframework.data.jpa.repository.Modifying;
+import com.nlw_connect.events.domain.entities.Events;
+import com.nlw_connect.events.domain.entities.Subscription;
+import com.nlw_connect.events.domain.entities.User;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
-import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.List;

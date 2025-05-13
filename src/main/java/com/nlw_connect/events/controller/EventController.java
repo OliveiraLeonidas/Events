@@ -1,13 +1,13 @@
 package com.nlw_connect.events.controller;
 
-import com.nlw_connect.events.dto.ErrorMessage;
+import com.nlw_connect.events.model.ErrorMessage;
 import com.nlw_connect.events.dto.SubscriptionResponse;
-import com.nlw_connect.events.dto.UserIndicatorNotFoundException;
+import com.nlw_connect.events.exception.UserIndicatorNotFoundException;
 import com.nlw_connect.events.exception.EventNotFoundException;
 import com.nlw_connect.events.exception.SubscriptionConflictException;
-import com.nlw_connect.events.model.Events;
-import com.nlw_connect.events.model.Subscription;
-import com.nlw_connect.events.model.User;
+import com.nlw_connect.events.domain.entities.Events;
+import com.nlw_connect.events.domain.entities.Subscription;
+import com.nlw_connect.events.domain.entities.User;
 import com.nlw_connect.events.service.EmailService;
 import com.nlw_connect.events.service.EventService;
 import com.nlw_connect.events.service.SubscriptionService;

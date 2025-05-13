@@ -1,4 +1,4 @@
-package com.nlw_connect.events.model;
+package com.nlw_connect.events.domain.entities;
 
 
 import jakarta.persistence.*;

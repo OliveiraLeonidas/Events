@@ -1,8 +1,8 @@
-package com.nlw_connect.events.dto;
+package com.nlw_connect.events.model;
 
 
-import com.nlw_connect.events.model.Events;
-import com.nlw_connect.events.model.User;
+import com.nlw_connect.events.domain.entities.Events;
+import com.nlw_connect.events.domain.entities.User;
 
 import java.util.HashMap;
 import java.util.Map;
