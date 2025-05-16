@@ -44,8 +44,15 @@ public class EventController {
 
     @Operation( summary = "create event" )
     @PostMapping()
-    public Events addEvent(@RequestBody Events newEvent) {
-        return eventService.addNewEvent(newEvent);
+    public ResponseEntity<?> addEvent(@RequestBody Events newEvent) throws Exception {
+
+        try {
+            return ResponseEntity.status(201).body(eventService.addNewEvent(newEvent));
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
     }
 
 
@@ -59,7 +66,7 @@ public class EventController {
     @Operation( summary = "Get event by ID" )
     @GetMapping("/{eventId}")
     public ResponseEntity<Events> getEventByEventId(@PathVariable("eventId") String eventId) {
-        Events evt = eventService.getById(eventId);
+        Events evt = eventService.getByEventId(eventId);
         if (evt != null) {
 
             return ResponseEntity.ok().body(evt);

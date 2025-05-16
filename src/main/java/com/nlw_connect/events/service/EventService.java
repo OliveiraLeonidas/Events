@@ -5,29 +5,34 @@ import com.nlw_connect.events.repository.EventRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
-
-// Regras de negócios
 @Service
 public class EventService {
 
-    @Autowired
-    private EventRepo repository;
 
-    public Events addNewEvent(Events event) {
+    private final EventRepo repository;
+
+    @Autowired
+    public EventService(EventRepo eventRepo) {
+        this.repository = eventRepo;
+    }
+
+    public Events addNewEvent(Events event) throws Exception {
         event.setPrettyName(event.getTitle().toLowerCase().replaceAll(" ", "-"));
+
+        if (event.getStartDate().isBefore(LocalDate.now()) || event.getEndDate().isBefore(event.getStartDate())) {
+            throw new Exception("event cannot be created with invalid date");
+        }
+
         return repository.save(event);
     }
 
     public List<Events> getAllEvents() {
-        return (List<Events>)repository.findAll();
+        return (List<Events>) repository.findAll();
     }
 
-    public Events getByPrettyName(String prettyName) {
-        return repository.findByPrettyName(prettyName);
-    }
-
-    public Events getById(String eventId) {
+    public Events getByEventId(String eventId) {
 
         return repository.findByEventId((eventId));
     }

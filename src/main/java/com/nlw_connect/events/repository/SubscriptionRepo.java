@@ -13,11 +13,8 @@ import java.util.List;
 
 public interface SubscriptionRepo extends CrudRepository<Subscription, Integer> {
     Subscription findByEventAndSubscriber(Events event, User user);
-
     Subscription findSubscriptionById(Integer id);
 
-
-//    Lembrar de sempre setar o tipo de Dialect Database para o projeto
     @Query(value = " SELECT COUNT(subscription_number) as total_indications, indication_user_id, users.name " +
             " FROM subscription INNER JOIN users " +
             " ON subscription.indication_user_id = users.id " +

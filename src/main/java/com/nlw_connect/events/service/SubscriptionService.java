@@ -22,22 +22,26 @@ import java.util.List;
 @Service
 public class SubscriptionService {
 
+    private final EventRepo eventRepo;
+    private final UserRepo userRepo;
+    private final SubscriptionRepo subRepo;
+
     @Autowired
-    private EventRepo eventRepo;
-    @Autowired
-    private UserRepo userRepo;
-    @Autowired
-    private SubscriptionRepo subRepo;
+    public SubscriptionService(EventRepo eventRepo, UserRepo userRepo, SubscriptionRepo subscriptionRepo) {
+        this.eventRepo = eventRepo;
+        this.userRepo = userRepo;
+        this.subRepo = subscriptionRepo;
+    }
 
     public SubscriptionResponse createSub(String eventId, User user, String userId) {
         Events event = eventRepo.findByEventId(eventId);
-        System.out.println("Encontrou o evento: " + event);
+
         if (event == null) {
             throw new EventNotFoundException("Event not found");
         }
 
         User foundUser = userRepo.findByEmail(user.getEmail());
-        System.out.println("Usuário encontrado: " + foundUser);
+
         if (foundUser == null) {
             user.setCreatedAt(Instant.now());
             user.setRole(Role.USER);
@@ -55,7 +59,6 @@ public class SubscriptionService {
         }
 
 
-        // se o evento, user e indicador existem, então uma inscrição pode ser criada
         Subscription subs = new Subscription();
         subs.setEvent(event);
         subs.setSubscriber(foundUser);

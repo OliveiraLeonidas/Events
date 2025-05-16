@@ -25,7 +25,7 @@ public class TokenService {
 
             return JWT.create()
                     .withIssuer("auth-api")
-                    .withClaim("role", "ROLE_" +user.getRole().name())
+                    .withClaim("role", "ROLE_" + user.getRole().name())
                     .withSubject(user.getUsername())
                     .withExpiresAt(genExpirationDate())
                     .sign(algorithm);
@@ -36,7 +36,6 @@ public class TokenService {
         }
     }
 
-    //verify if is a valid token
     public String validateToken(String token) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
