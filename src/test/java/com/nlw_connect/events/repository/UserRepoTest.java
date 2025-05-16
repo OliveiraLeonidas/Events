@@ -2,6 +2,7 @@ package com.nlw_connect.events.repository;
 
 import com.nlw_connect.events.domain.entities.User;
 import com.nlw_connect.events.dto.RegisterDTO;
+import com.nlw_connect.events.dto.UserDTO;
 import com.nlw_connect.events.model.Role;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
@@ -33,34 +34,30 @@ class UserRepoTest {
     @DisplayName("Should get user successfully from database")
     void findByEmailCase1() {
         String email = "leonidas@gmail.com";
-        User data = new User("Leonidas", email, "leooliv", "44444", Role.USER, Instant.now());
+        UserDTO data = new UserDTO("Leonidas", email, "olivleo", "951357", Role.USER, Instant.now());
 
-        this.createUser(data.getName(), data.getEmail(), data.getUsername(), data.getPassword(), data.getRole(), data.getCreatedAt());
+        this.createUser(data);
         entityManager.flush();
         Optional<User> foundUser = Optional.ofNullable(this.userRepo.findByEmail(email));
 
         assertThat(foundUser.isPresent()).isTrue();
-
+        assertThat(foundUser.get().getEmail()).isEqualTo(email);
     }
 
     @Test
-    void findByUsername() {
+    @DisplayName("Should not get user from database")
+    void findByEmailCase2() {
+        String wrongEmail = "leo@gmail.com.br";
+
+        Optional<User> result = Optional.ofNullable(this.userRepo.findByEmail(wrongEmail));
+
+        assertThat(result.isEmpty()).isTrue();
     }
 
-    @Test
-    void findUserByUsername() {
-    }
 
-    @Test
-    void findUserById() {
-    }
-
-
-    private User createUser(String name, String email, String username, String encryptedPassword, Role role, Instant createdAt){
-        User user = new User(name, email, username, encryptedPassword, role,createdAt);
-
-        this.entityManager.persist(user);
-
-        return user;
+    private void createUser(UserDTO data){
+        User newUser = new User(data);
+        this.entityManager.persist(newUser);
+//        return newUser;
     }
 }

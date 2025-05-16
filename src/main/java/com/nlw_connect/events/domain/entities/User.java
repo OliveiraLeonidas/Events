@@ -1,5 +1,6 @@
 package com.nlw_connect.events.domain.entities;
 
+import com.nlw_connect.events.dto.UserDTO;
 import com.nlw_connect.events.model.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -49,14 +50,13 @@ public class User implements UserDetails {
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 
-    public User(String name, String email, String username, String encryptedPassword, Role role, Instant createdAt) {
-        this.name = name;
-        this.email = email;
-        this.username = username;
-        this.password = encryptedPassword;
-        this.role = role;
-        this.createdAt = createdAt;
-
+    public User(UserDTO user) {
+        this.name = user.name();
+        this.email =  user.email();
+        this.username = user.username();
+        this.password = user.password();
+        this.role = user.role();
+        this.createdAt = user.createdAt();
     }
 
 
@@ -65,10 +65,6 @@ public class User implements UserDetails {
         return this.username;
     }
 
-    /**
-     * @return
-     * Quais roles o usuário possui
-     */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if(this.role.name().equals(Role.ADMIN.getRole())) {
@@ -80,34 +76,21 @@ public class User implements UserDetails {
         else return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
-    /**
-     * @return
-     * Verifica se a conta do usuário está autenticada
-     */
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
 
-    /**
-     * @return
-     */
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
 
-    /**
-     * @return
-     */
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
-    /**
-     * @return
-     */
     @Override
     public boolean isEnabled() {
         return true;

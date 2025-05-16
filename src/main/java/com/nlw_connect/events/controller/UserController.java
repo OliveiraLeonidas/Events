@@ -4,6 +4,8 @@ import com.nlw_connect.events.dto.*;
 import com.nlw_connect.events.infra.security.TokenService;
 import com.nlw_connect.events.domain.entities.User;
 import com.nlw_connect.events.repository.UserRepo;
+import com.nlw_connect.events.service.UserService;
+import io.swagger.v3.oas.annotations.headers.Header;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,29 +25,26 @@ public class UserController {
 
     @Autowired
     private UserRepo userRepo;
+
     @Autowired
-    private TokenService tokenService;
+    private UserService userService;
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid AuthenticationDTO data) {
-        var usernamePassword = new UsernamePasswordAuthenticationToken(data.username(), data.password());
-        var auth = this.authenticationManager.authenticate(usernamePassword);
+        LoginResponseDTO token = userService.loginAuth(data);
 
-        var token  = tokenService.generateToken((User) auth.getPrincipal());
-
-        return ResponseEntity.ok(new LoginResponseDTO(token));
-
+        return ResponseEntity.ok(token);
     }
 
     @PostMapping("/register")
-    public ResponseEntity<RegisterResponseDTO> register(@RequestBody @Valid RegisterDTO data) {
-        if(this.userRepo.findByUsername(data.username()) != null) return ResponseEntity.badRequest().build();
-        String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
-        User newUser = new User(data.name(), data.email(), data.username(), encryptedPassword, data.role(), Instant.now());
-
-        this.userRepo.save(newUser);
-
-        return ResponseEntity.ok(RegisterResponseDTO.from(newUser));
+    public ResponseEntity<RegisterResponseDTO> register(@RequestBody @Valid UserDTO data) {
+        try {
+            RegisterResponseDTO response = userService.registerAuth(data);
+            return ResponseEntity.status(201).body(response);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @DeleteMapping("/delete")
